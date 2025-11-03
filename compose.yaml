@@ -1,0 +1,40 @@
+services:
+  reverseproxy:
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443" 
+    restart: always
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl/origincertificate.cer:/etc/nginx/ssl/origincertificate.cer:ro
+      - ./nginx/ssl/originkey.pem:/etc/nginx/ssl/originkey.pem:ro
+
+  wordpress:
+    image: wordpress
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: workpressuser
+      WORDPRESS_DB_PASSWORD: KMbjbW8;ht-0aick(pP
+      WORDPRESS_DB_NAME: wordpress_kamalo
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'https://www.kamalo.co.uk');
+        define('WP_SITEURL', 'https://www.kamalo.co.uk');
+    volumes:
+      - wordpress:/var/www/html
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress_kamalo
+      MYSQL_USER: workpressuser
+      MYSQL_PASSWORD: KMbjbW8;ht-0aick(pP
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  wordpress:
+  db:
