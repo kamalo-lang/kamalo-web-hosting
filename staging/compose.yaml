@@ -1,18 +1,9 @@
 services:
-  reverseproxy:
-    image: nginx
-    ports:
-      - "80:80"
-      - "443:443" 
-    restart: always
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl/origincertificate.cer:/etc/nginx/ssl/origincertificate.cer:ro
-      - ./nginx/ssl/originkey.pem:/etc/nginx/ssl/originkey.pem:ro
-
   wordpress:
     image: wordpress
     restart: always
+    ports:
+      - 8080:80
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
